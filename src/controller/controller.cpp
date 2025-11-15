@@ -11,7 +11,7 @@ Controller::Controller(Ui::UserInterface* ui, Core::Model* mod)
 
 void Controller::show() const noexcept { m_ui->show(); }
 
-void Controller::Start(size_t Threads, size_t Limit) {
+void Controller::Start(qsizetype Threads, qsizetype Limit) {
   qInfo() << "T:" << Threads << "L:" << Limit;
 }
 }  // namespace Ctrl

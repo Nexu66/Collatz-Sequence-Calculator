@@ -13,8 +13,8 @@ class UserInterface : public QDialog {
  public:
   UserInterface(QWidget* parent = nullptr) : QDialog{parent} {}
  signals:
-  void SendThreadLimit(size_t CoresSelected);
-  void SendUpperLimit(size_t UpperLimit);
+  void SendThreadLimit(qsizetype CoresSelected);
+  void SendUpperLimit(qsizetype UpperLimit);
   void on_btnStop_clicked();
 
  protected:

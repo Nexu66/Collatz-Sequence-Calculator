@@ -15,6 +15,6 @@ class Controller : public QObject {
   void show() const noexcept;
 
  private slots:
-  void Start(size_t Threads, size_t Limit);
+  void Start(qsizetype Threads, qsizetype Limit);
 };
 }  // namespace Ctrl
