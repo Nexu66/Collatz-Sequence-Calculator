@@ -4,7 +4,7 @@
 namespace Core {
 class Model : public QObject {
   Q_OBJECT
- public slots:
+ public:
   virtual void SetUpperLimit(size_t UpperLimit) noexcept = 0;
   virtual void SetThreadLimit(size_t ThreadLimit) noexcept = 0;
 
