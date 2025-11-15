@@ -5,7 +5,7 @@ qt_add_executable(main
 
 target_link_libraries(main
     PRIVATE
-        dialog
+        controller
 )
 
 install(TARGETS main

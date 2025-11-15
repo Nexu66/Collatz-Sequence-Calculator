@@ -5,9 +5,24 @@
 #include <QThread>
 
 namespace Ui {
+
 class Dialog;
 
-class MainDialog : public QDialog {
+class UserInterface : public QDialog {
+  Q_OBJECT
+ public:
+  UserInterface(QWidget* parent = nullptr) : QDialog{parent} {}
+ signals:
+  void SendThreadLimit(size_t CoresSelected);
+  void SendUpperLimit(size_t UpperLimit);
+  void on_btnStop_clicked();
+
+ protected:
+  virtual void on_btnStart_clicked() noexcept = 0;
+  virtual void on_btnExit_clicked() noexcept = 0;
+};
+
+class MainDialog : public UserInterface {
   Q_OBJECT
 
  public:
@@ -15,13 +30,13 @@ class MainDialog : public QDialog {
   ~MainDialog();
 
  private slots:
-  void on_btnExit_clicked() noexcept;
+  void on_btnStart_clicked() noexcept override;
+  void on_btnExit_clicked() noexcept override;
 
   void on_sliderThreadCountSelector_valueChanged(int value) const noexcept;
 
  private:
   Dialog* m_ui;
-  const unsigned int m_totalCores = QThread::idealThreadCount();
 };
 
 }  // namespace Ui

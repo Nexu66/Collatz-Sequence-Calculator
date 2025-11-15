@@ -13,3 +13,5 @@ include(GNUInstallDirs)
 
 add_subdirectory(src/app)
 add_subdirectory(src/dialog)
+add_subdirectory(src/core)
+add_subdirectory(src/controller)

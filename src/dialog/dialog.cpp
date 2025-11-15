@@ -2,19 +2,27 @@
 
 #include "ui_dialog.h"
 
-Ui::MainDialog::MainDialog(QWidget* parent)
-    : QDialog{parent}, m_ui{new Ui::Dialog} {
+namespace Ui {
+MainDialog::MainDialog(QWidget* parent)
+    : UserInterface{parent}, m_ui{new Ui::Dialog} {
   m_ui->setupUi(this);
   m_ui->sliderThreadCountSelector->setMinimum(1);
-  m_ui->sliderThreadCountSelector->setMaximum(m_totalCores);
+  m_ui->sliderThreadCountSelector->setMaximum(QThread::idealThreadCount());
   m_ui->sliderThreadCountSelector->setTickInterval(1);
 }
 
-Ui::MainDialog::~MainDialog() { delete m_ui; }
+MainDialog::~MainDialog() { delete m_ui; }
 
-void Ui::MainDialog::on_btnExit_clicked() noexcept { this->close(); }
+void MainDialog::on_btnStart_clicked() noexcept {
+  emit this->SendThreadLimit(m_ui->sliderThreadCountSelector->value());
+  emit this->SendUpperLimit(m_ui->spinBoxNumRange->value());
+}
 
-void Ui::MainDialog::on_sliderThreadCountSelector_valueChanged(
+void MainDialog::on_btnExit_clicked() noexcept { this->close(); }
+
+void MainDialog::on_sliderThreadCountSelector_valueChanged(
     int value) const noexcept {
   m_ui->leThreads->setText(QString::number(value));
 }
+
+}  // namespace Ui
