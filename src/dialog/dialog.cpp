@@ -24,4 +24,11 @@ void MainDialog::on_sliderThreadCountSelector_valueChanged(
   m_ui->leThreads->setText(QString::number(value));
 }
 
+void MainDialog::DisplayCollatzResult(
+    std::pair<qsizetype, qsizetype> CollatzResult) noexcept {
+  m_ui->leResult->setText(
+      QStringLiteral("Number: ") + QString::number(CollatzResult.first) +
+      QStringLiteral(" Lenght: ") + QString::number(CollatzResult.second));
+}
+
 }  // namespace Ui

@@ -9,6 +9,8 @@ class Model : public QObject {
  public:
   virtual void StartProcessing(qsizetype CurrentCoresSelected,
                                qsizetype CurrentUpperLimit) noexcept = 0;
+ signals:
+  void SendCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult);
 };
 
 class CollatzProcessor : public Model {

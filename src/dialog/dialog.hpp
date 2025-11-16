@@ -12,6 +12,8 @@ class View : public QDialog {
   Q_OBJECT
  public:
   View(QWidget* parent = nullptr) : QDialog{parent} {}
+  virtual void DisplayCollatzResult(
+      std::pair<qsizetype, qsizetype> CollatzResult) noexcept = 0;
  signals:
   void SendViewInfo(qsizetype CoresSelected, qsizetype UpperLimit);
   void on_btnStop_clicked();
@@ -33,6 +35,10 @@ class MainDialog : public View {
   void on_btnExit_clicked() noexcept override;
 
   void on_sliderThreadCountSelector_valueChanged(int value) const noexcept;
+
+  void DisplayCollatzResult(
+      std::pair<qsizetype, qsizetype> CollatzResult) noexcept override;
+ public slots:
 
  private:
   Dialog* m_ui;
