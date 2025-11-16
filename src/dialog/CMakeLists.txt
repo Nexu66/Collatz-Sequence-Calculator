@@ -4,4 +4,5 @@ target_link_libraries(dialog
     PUBLIC
         Qt::Core
         Qt::Widgets
+        timer
 )

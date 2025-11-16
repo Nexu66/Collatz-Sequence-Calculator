@@ -241,7 +241,7 @@
                   </size>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing</set>
+                  <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
                  </property>
                  <property name="readOnly">
                   <bool>true</bool>
@@ -298,7 +298,7 @@
                   </size>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing</set>
+                  <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
                  </property>
                  <property name="readOnly">
                   <bool>true</bool>
