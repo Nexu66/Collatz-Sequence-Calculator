@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDialog>
+#include <QMouseEvent>
 #include <QThread>
 
 namespace Ui {

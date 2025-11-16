@@ -1,6 +1,7 @@
 #pragma once
 #include <QAbstractButton>
 #include <QScopedPointer>
+#include <thread>
 
 #include "core.hpp"
 #include "dialog.hpp"
@@ -9,6 +10,10 @@ class Controller : public QObject {
   Q_OBJECT
   QScopedPointer<Ui::View> m_ui;
   QScopedPointer<Core::Model> m_mod;
+  std::jthread ModelThread;
+
+ private slots:
+  void LaunchModel(qsizetype CurrentCoresSelected, qsizetype CurrentUpperLimit);
 
  public:
   Controller(Ui::View* ui, Core::Model* mod);
