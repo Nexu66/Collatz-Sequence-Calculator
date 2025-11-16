@@ -16,7 +16,8 @@ class Model : public QObject {
 class CollatzProcessor : public Model {
   Q_OBJECT
   impl::CollatzProcessorImpl impl;
- private slots:
+
+ private:
   void StartProcessing(qsizetype CurrentCoresSelected,
                        qsizetype CurrentUpperLimit) noexcept override;
 };
