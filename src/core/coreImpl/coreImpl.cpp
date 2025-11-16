@@ -11,7 +11,9 @@ const qsizetype s_MaxSize = std::numeric_limits<qsizetype>::max();
 std::atomic<qsizetype> CollatzProcessorImpl::Elements = 2;
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
-    const qsizetype CurrentThreadLimit, const qsizetype CurrentUpperLimit) {
+    std::stop_token stop, const qsizetype CurrentThreadLimit,
+    const qsizetype CurrentUpperLimit) {
+  Timer.StartTimer();
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i] = std::jthread{
         std::bind_front(&CollatzProcessorImpl::Run, this, CurrentUpperLimit)};
@@ -23,6 +25,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   Elements = 2;
 
   std::pair<qsizetype, qsizetype> res = FindFinalResult();
+  std::cout << "Out time is: " << Timer.StopTimer() << "ms\n";
   std::cout << "Num: " << res.first << " Count: " << res.second << "\n";
 
   // CHECK FOR STOP SIGNAL
@@ -51,10 +54,10 @@ void CollatzProcessorImpl::SaveFinalThreadResult(
     std::pair<qsizetype, qsizetype> final_thread_result) {
   std::lock_guard<std::mutex> write_access_lock{ThreadResultsLock};
   ThreadResults.push_back(final_thread_result);
-  std::cout << std::this_thread::get_id() << " Vector:\n";
-  foreach (auto p, ThreadResults) {
-    std::cout << "first: " << p.first << " second: " << p.second << "\n";
-  }
+  // std::cout << std::this_thread::get_id() << " Vector:\n";
+  // foreach (auto p, ThreadResults) {
+  //   std::cout << "first: " << p.first << " second: " << p.second << "\n";
+  // }
 }
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::FindFinalResult() {

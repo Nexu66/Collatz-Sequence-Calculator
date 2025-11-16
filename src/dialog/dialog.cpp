@@ -24,12 +24,13 @@ void MainDialog::on_sliderThreadCountSelector_valueChanged(
     int value) const noexcept {
   m_ui->leThreads->setText(QString::number(value));
 }
-
 void MainDialog::DisplayCollatzResult(
-    std::pair<qsizetype, qsizetype> CollatzResult) noexcept {
+    std::pair<qsizetype, qsizetype> CollatzResult, timer::Timer Time) noexcept {
   m_ui->leResult->setText(
       QStringLiteral("Number: ") + QString::number(CollatzResult.first) +
       QStringLiteral(" Lenght: ") + QString::number(CollatzResult.second));
+  m_ui->leTimeResult->setText(QString::number(Time.time) +
+                              QStringLiteral("ms"));
   m_ui->btnStart->setEnabled(true);
 }
 

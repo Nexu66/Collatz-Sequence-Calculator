@@ -7,10 +7,12 @@ namespace Core {
 class Model : public QObject {
   Q_OBJECT
  public:
-  virtual void StartProcessing(qsizetype CurrentCoresSelected,
+  virtual void StartProcessing(std::stop_token stop,
+                               qsizetype CurrentCoresSelected,
                                qsizetype CurrentUpperLimit) noexcept = 0;
  signals:
-  void SendCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult);
+  void SendCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult,
+                         timer::Timer Time);
 };
 
 class CollatzProcessor : public Model {
@@ -18,7 +20,7 @@ class CollatzProcessor : public Model {
   impl::CollatzProcessorImpl impl;
 
  private:
-  void StartProcessing(qsizetype CurrentCoresSelected,
+  void StartProcessing(std::stop_token stop, qsizetype CurrentCoresSelected,
                        qsizetype CurrentUpperLimit) noexcept override;
 };
 

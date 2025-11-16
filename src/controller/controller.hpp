@@ -14,6 +14,7 @@ class Controller : public QObject {
 
  private slots:
   void LaunchModel(qsizetype CurrentCoresSelected, qsizetype CurrentUpperLimit);
+  void StopAlgorithm();
 
  public:
   Controller(Ui::View* ui, Core::Model* mod);

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QList>
 #include <QThread>
+#include <Timer.hpp>
 #include <atomic>
 #include <iostream>
 #include <limits>
@@ -21,9 +22,11 @@ class CollatzProcessorImpl {
   std::vector<std::pair<qsizetype, qsizetype>> ThreadResults;
   std::mutex ThreadResultsLock;
   static std::vector<std::jthread> s_ThreadPool;
+  timer::Timer Timer;
 
   std::pair<qsizetype, qsizetype> StartProcessing(
-      const qsizetype CurrentThreadLimit, const qsizetype CurrentUpperLimit);
+      std::stop_token stop, const qsizetype CurrentThreadLimit,
+      const qsizetype CurrentUpperLimit);
   std::pair<qsizetype, qsizetype> CalculateCollatz(qsizetype current_element);
   void SaveFinalThreadResult(
       std::pair<qsizetype, qsizetype> final_thread_result);

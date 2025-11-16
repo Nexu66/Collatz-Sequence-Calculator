@@ -3,7 +3,9 @@
 #include <QCoreApplication>
 #include <QDialog>
 #include <QMouseEvent>
+#include <QStringLiteral>
 #include <QThread>
+#include <Timer.hpp>
 
 namespace Ui {
 
@@ -14,7 +16,8 @@ class View : public QDialog {
  public:
   View(QWidget* parent = nullptr) : QDialog{parent} {}
   virtual void DisplayCollatzResult(
-      std::pair<qsizetype, qsizetype> CollatzResult) noexcept = 0;
+      std::pair<qsizetype, qsizetype> CollatzResult,
+      timer::Timer Time) noexcept = 0;
  signals:
   void SendViewInfo(qsizetype CoresSelected, qsizetype UpperLimit);
   void on_btnStop_clicked();
@@ -37,8 +40,8 @@ class MainDialog : public View {
 
   void on_sliderThreadCountSelector_valueChanged(int value) const noexcept;
 
-  void DisplayCollatzResult(
-      std::pair<qsizetype, qsizetype> CollatzResult) noexcept override;
+  void DisplayCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult,
+                            timer::Timer Timer) noexcept override;
  public slots:
 
  private:
