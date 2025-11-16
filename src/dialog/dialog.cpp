@@ -13,6 +13,7 @@ MainDialog::MainDialog(QWidget* parent) : View{parent}, m_ui{new Ui::Dialog} {
 MainDialog::~MainDialog() { delete m_ui; }
 
 void MainDialog::on_btnStart_clicked() noexcept {
+  m_ui->btnStart->setEnabled(false);
   emit this->SendViewInfo(m_ui->sliderThreadCountSelector->value(),
                           m_ui->spinBoxNumRange->value());
 }
@@ -29,6 +30,7 @@ void MainDialog::DisplayCollatzResult(
   m_ui->leResult->setText(
       QStringLiteral("Number: ") + QString::number(CollatzResult.first) +
       QStringLiteral(" Lenght: ") + QString::number(CollatzResult.second));
+  m_ui->btnStart->setEnabled(true);
 }
 
 }  // namespace Ui

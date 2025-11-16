@@ -20,6 +20,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i].join();
   }
+  Elements = 2;
 
   std::pair<qsizetype, qsizetype> res = FindFinalResult();
   std::cout << "Num: " << res.first << " Count: " << res.second << "\n";
