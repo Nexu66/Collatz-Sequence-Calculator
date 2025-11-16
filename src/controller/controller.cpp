@@ -8,7 +8,4 @@ Controller::Controller(Ui::View* ui, Core::Model* mod) : m_ui{ui}, m_mod{mod} {
 
 void Controller::show() const noexcept { m_ui->show(); }
 
-void Controller::Start(qsizetype Threads, qsizetype Limit) {
-  qInfo() << "T:" << Threads << "L:" << Limit;
-}
 }  // namespace Ctrl

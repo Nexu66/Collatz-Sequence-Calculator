@@ -14,7 +14,5 @@ class Controller : public QObject {
   Controller(Ui::View* ui, Core::Model* mod);
   void show() const noexcept;
 
- private slots:
-  void Start(qsizetype Threads, qsizetype Limit);
 };
 }  // namespace Ctrl
