@@ -1,14 +1,21 @@
 #pragma once
 #include <QList>
 #include <QThread>
+#include <atomic>
+#include <limits>
 #include <thread>
 
 namespace Core {
 namespace impl {
 class CollatzProcessorImpl {
  public:
-  static const qsizetype CoresCount;
-  static const QList<std::jthread> thread_pool;
+  static const qsizetype s_CoresCount;
+  static QList<std::jthread> s_ThreadPool;
+  static const qsizetype s_MaxSize;
+  static std::atomic<int> element;
+
+  std::pair<int, int> StartProcessing(const qsizetype CurrentUpperLimit,
+                                      const qsizetype CurrentThreadLimit);
 };
 
 }  // namespace impl
