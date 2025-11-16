@@ -13,6 +13,7 @@ class Model : public QObject {
  signals:
   void SendCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult,
                          timer::Timer Time);
+  void SendStopMessage();
 };
 
 class CollatzProcessor : public Model {

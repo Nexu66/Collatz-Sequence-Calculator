@@ -7,6 +7,8 @@ Controller::Controller(Ui::View* ui, Core::Model* mod) : m_ui{ui}, m_mod{mod} {
                    &Controller::LaunchModel);
   QObject::connect(m_mod.get(), &Core::Model::SendCollatzResult, m_ui.get(),
                    &Ui::View::DisplayCollatzResult);
+  QObject::connect(m_mod.get(), &Core::Model::SendStopMessage, m_ui.get(),
+                   &Ui::View::DisplayStopMessage);
   QObject::connect(m_ui.get(), &Ui::View::on_btnStop_clicked, this,
                    &Controller::StopAlgorithm);
 }

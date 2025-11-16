@@ -15,14 +15,16 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
     const qsizetype CurrentUpperLimit) {
   Timer.StartTimer();
   for (int i = 0; i < CurrentThreadLimit; ++i) {
-    s_ThreadPool[i] = std::jthread{
-        std::bind_front(&CollatzProcessorImpl::Run, this, CurrentUpperLimit)};
+    s_ThreadPool[i] =
+        std::jthread{&CollatzProcessorImpl::Run, this, stop, CurrentUpperLimit};
   }
 
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i].join();
   }
   Elements = 2;
+
+  if (stop.stop_requested()) return std::make_pair(-1, -1);
 
   std::pair<qsizetype, qsizetype> res = FindFinalResult();
   std::cout << "Out time is: " << Timer.StopTimer() << "ms\n";
@@ -70,12 +72,13 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::FindFinalResult() {
   return result;
 }
 
-void CollatzProcessorImpl::Run(const qsizetype CurrentUpperLimit,
-                               std::stop_token stop) {
+void CollatzProcessorImpl::Run(std::stop_token stop,
+                               const qsizetype CurrentUpperLimit) {
   qsizetype current_element = Elements++;
   std::pair<qsizetype, qsizetype> local_thread_result{1, 0};
 
   while (current_element <= CurrentUpperLimit) {
+    if (stop.stop_requested()) return;
     std::pair<qsizetype, qsizetype> current_result =
         CalculateCollatz(current_element);
     if (current_result.second > local_thread_result.second)

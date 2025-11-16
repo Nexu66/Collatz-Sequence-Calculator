@@ -31,7 +31,7 @@ class CollatzProcessorImpl {
   void SaveFinalThreadResult(
       std::pair<qsizetype, qsizetype> final_thread_result);
   std::pair<qsizetype, qsizetype> FindFinalResult();
-  void Run(const qsizetype CurrentUpperLimit, std::stop_token stop);
+  void Run(std::stop_token stop, const qsizetype CurrentUpperLimit);
 };
 
 }  // namespace impl
