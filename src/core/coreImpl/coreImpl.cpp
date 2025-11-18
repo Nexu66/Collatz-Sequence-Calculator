@@ -20,6 +20,7 @@ bool CollatzProcessorImpl::WillOverflow(qsizetype current_element) {
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
     std::stop_token stop, const qsizetype CurrentThreadLimit,
     const qsizetype CurrentUpperLimit) {
+  std::cout << "CURRENT CORES IN coreImpl: " << CurrentThreadLimit << "\n";
   Timer.StartTimer();
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i] =
@@ -65,6 +66,9 @@ void CollatzProcessorImpl::SaveFinalThreadResult(
     std::pair<qsizetype, qsizetype> final_thread_result) {
   std::lock_guard<std::mutex> write_access_lock{ThreadResultsLock};
   ThreadResults.push_back(final_thread_result);
+  // for (auto p : ThreadResults) {
+  //   std::cout << "Val: " << p.first << " Count: " << p.second << "\n";
+  // }
 }
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::FindFinalResult() {
@@ -79,7 +83,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::FindFinalResult() {
 
 void CollatzProcessorImpl::Run(std::stop_token stop,
                                const qsizetype CurrentUpperLimit) {
-  std::cout << "MAX: " << s_MaxSize << "\n";
+  // std::cout << "MAX: " << s_MaxSize << "\n";
   qsizetype current_element = Elements++;
   std::pair<qsizetype, qsizetype> local_thread_result{1, 0};
 

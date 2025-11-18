@@ -20,6 +20,7 @@ class View : public QDialog {
       timer::Timer Time) noexcept = 0;
   virtual void DisplayStopMessage() noexcept = 0;
   virtual void DisplayOverflowMessage() noexcept = 0;
+  virtual void RetrySendingViewInfo() noexcept = 0;
  signals:
   void SendViewInfo(qsizetype CoresSelected, qsizetype UpperLimit);
   void on_btnStop_clicked();
@@ -46,6 +47,7 @@ class MainDialog : public View {
                             timer::Timer Timer) noexcept override;
   void DisplayStopMessage() noexcept override;
   void DisplayOverflowMessage() noexcept override;
+  void RetrySendingViewInfo() noexcept override;
 
  public slots:
 

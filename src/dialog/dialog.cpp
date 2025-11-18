@@ -48,4 +48,9 @@ void MainDialog::DisplayOverflowMessage() noexcept {
   m_ui->btnStart->setEnabled(true);
 }
 
+void MainDialog::RetrySendingViewInfo() noexcept {
+  emit this->SendViewInfo(m_ui->sliderThreadCountSelector->value(),
+                          m_ui->spinBoxNumRange->value());
+}
+
 }  // namespace Ui

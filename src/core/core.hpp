@@ -15,6 +15,7 @@ class Model : public QObject {
                          timer::Timer Time);
   void SendStopMessage();
   void SendOverflowMessage();
+  void RetryBtnStart();
 };
 
 class CollatzProcessor : public Model {
