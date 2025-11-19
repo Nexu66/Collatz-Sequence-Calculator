@@ -6,6 +6,7 @@ const qsizetype CollatzProcessorImpl::s_CoresCount =
     QThread::idealThreadCount();
 std::vector<std::jthread> CollatzProcessorImpl::s_ThreadPool{
     static_cast<size_t>(CollatzProcessorImpl::s_CoresCount)};
+QHash<qsizetype, qsizetype> CollatzProcessorImpl::s_CalculatedValues;
 std::atomic<qsizetype> CollatzProcessorImpl::Elements = 2;
 
 void CollatzProcessorImpl::RequestStop() {
@@ -46,9 +47,12 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::CalculateCollatz(
     qsizetype current_element) {
+  qsizetype original_element = current_element;
   qsizetype step_counter = 0;
-  std::pair<qsizetype, qsizetype> local_result{current_element, step_counter};
   while (current_element != 1) {
+    if ((current_element & (current_element - 1)) == 0) {
+      return std::make_pair(original_element, step_counter);
+    }
     if (current_element % 2) {
       current_element = current_element * 3 + 1;
       if (WillOverflow(current_element))
@@ -58,8 +62,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::CalculateCollatz(
     }
     ++step_counter;
   }
-  local_result.second = step_counter;
-  return local_result;
+  return std::make_pair(original_element, step_counter);
 }
 
 void CollatzProcessorImpl::SaveFinalThreadResult(

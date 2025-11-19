@@ -24,6 +24,7 @@ class CollatzProcessorImpl {
   std::vector<std::pair<qsizetype, qsizetype>> ThreadResults;
   std::mutex ThreadResultsLock;
   static std::vector<std::jthread> s_ThreadPool;
+  static QHash<qsizetype, qsizetype> s_CalculatedValues;
   timer::Timer Timer;
 
   void RequestStop();
