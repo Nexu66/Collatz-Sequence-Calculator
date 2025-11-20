@@ -6,7 +6,6 @@ const qsizetype CollatzProcessorImpl::s_CoresCount =
     QThread::idealThreadCount();
 std::vector<std::jthread> CollatzProcessorImpl::s_ThreadPool{
     static_cast<size_t>(CollatzProcessorImpl::s_CoresCount)};
-QHash<qsizetype, qsizetype> CollatzProcessorImpl::s_PreCalculatedValues;
 std::atomic<qsizetype> CollatzProcessorImpl::Elements = 0;
 
 void CollatzProcessorImpl::RequestStop() {
