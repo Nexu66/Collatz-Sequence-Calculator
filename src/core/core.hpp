@@ -11,7 +11,8 @@ class Model : public QObject {
                                qsizetype CurrentCoresSelected,
                                qsizetype CurrentUpperLimit) noexcept = 0;
  signals:
-  void SendCollatzResult(qsizetype CollatzResult, timer::Timer Time);
+  void SendCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult,
+                         timer::Timer Time);
   void SendStopMessage();
   void SendOverflowMessage();
   void RetryBtnStart();

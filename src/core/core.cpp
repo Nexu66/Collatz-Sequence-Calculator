@@ -8,9 +8,11 @@ void CollatzProcessor::StartProcessing(std::stop_token stop,
       CurrentThreadLimit <= impl::CollatzProcessorImpl::s_CoresCount) {
     auto algorithm_result =
         impl.StartProcessing(stop, CurrentThreadLimit, CurrentUpperLimit);
-    if (algorithm_result == impl::Signals::STOP)
+    if (algorithm_result.first == impl::Signals::STOP &&
+        algorithm_result.second == impl::STOP)
       emit SendStopMessage();
-    else if (algorithm_result == impl::Signals::OVERFLOW) {
+    else if (algorithm_result.first == impl::Signals::OVERFLOW &&
+             algorithm_result.second == impl::Signals::OVERFLOW) {
       emit SendOverflowMessage();
     } else {
       emit SendCollatzResult(algorithm_result, impl.Timer);

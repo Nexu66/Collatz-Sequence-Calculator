@@ -15,8 +15,9 @@ class View : public QDialog {
   Q_OBJECT
  public:
   View(QWidget* parent = nullptr) : QDialog{parent} {}
-  virtual void DisplayCollatzResult(qsizetype CollatzResult,
-                                    timer::Timer Time) noexcept = 0;
+  virtual void DisplayCollatzResult(
+      std::pair<qsizetype, qsizetype> CollatzResult,
+      timer::Timer Time) noexcept = 0;
   virtual void DisplayStopMessage() noexcept = 0;
   virtual void DisplayOverflowMessage() noexcept = 0;
   virtual void RetrySendingViewInfo() noexcept = 0;
@@ -42,7 +43,7 @@ class MainDialog : public View {
 
   void on_sliderThreadCountSelector_valueChanged(int value) const noexcept;
 
-  void DisplayCollatzResult(qsizetype CollatzResult,
+  void DisplayCollatzResult(std::pair<qsizetype, qsizetype> CollatzResult,
                             timer::Timer Timer) noexcept override;
   void DisplayStopMessage() noexcept override;
   void DisplayOverflowMessage() noexcept override;
