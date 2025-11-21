@@ -13,7 +13,7 @@ timer::Timer CollatzProcessorImpl::s_Timer{};
 QList<std::atomic<qsizetype>*> CollatzProcessorImpl::s_Cache{};
 
 CollatzProcessorImpl::CollatzProcessorImpl() {
-  s_Cache.reserve(1000000);
+  s_Cache.reserve(10000000);
   s_ThreadResults.resize(cs_CoresCount);
 }
 
@@ -37,7 +37,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   s_Timer.StartTimer();
   std::cout << "SIZE: " << s_Cache.size() << "\n";
   if (CurrentUpperLimit > s_Cache.size()) {
-    s_Cache.resize(CurrentUpperLimit * 3 + 1, nullptr);
+    s_Cache.resize(CurrentUpperLimit, nullptr);
   }
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i] = std::jthread{&CollatzProcessorImpl::Run, this, stop,
