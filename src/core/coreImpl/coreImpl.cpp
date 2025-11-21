@@ -10,7 +10,7 @@ std::vector<std::jthread> CollatzProcessorImpl::s_ThreadPool{
 
 timer::Timer CollatzProcessorImpl::s_Timer{};
 
-QList<std::atomic<qsizetype>*> CollatzProcessorImpl::s_Cache{};
+std::vector<std::atomic<qsizetype>*> CollatzProcessorImpl::s_Cache{};
 
 CollatzProcessorImpl::CollatzProcessorImpl() {
   s_Cache.reserve(10000000);
