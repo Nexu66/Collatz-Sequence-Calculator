@@ -9,7 +9,6 @@ std::vector<std::jthread> CollatzProcessorImpl::s_ThreadPool{
     static_cast<size_t>(CollatzProcessorImpl::cs_CoresCount)};
 std::atomic<qsizetype> CollatzProcessorImpl::s_Elements = 1;
 
-
 timer::Timer CollatzProcessorImpl::s_Timer{};
 
 QList<std::atomic<qsizetype>*> CollatzProcessorImpl::s_Cache{};
@@ -38,9 +37,8 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   std::cout << "CURRENT CORES IN coreImpl: " << CurrentThreadLimit << "\n";
   s_Timer.StartTimer();
   std::cout << "SIZE: " << s_Cache.size() << "\n";
-  const qsizetype current_size = s_Cache.size();
-  for (int i = 0; i < CurrentUpperLimit - current_size; ++i) {
-    s_Cache.append(new std::atomic<qsizetype>{0});
+  if (CurrentUpperLimit > s_Cache.size()) {
+    s_Cache.resize(CurrentUpperLimit * 3 + 1, nullptr);
   }
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i] = std::jthread{&CollatzProcessorImpl::Run, this, stop,
@@ -71,8 +69,13 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
   qsizetype result_step_counter = 0;
 
   while (current_element <= CurrentUpperLimit) {
-    if (s_Cache[current_element - 1]->load() == 0 && current_element != 1) {
-      CalculateCollatz(current_element);
+    if (current_element == 1) {
+      current_element = s_Elements++;
+      continue;
+    }
+
+    if (s_Cache[current_element - 1] == nullptr) {
+      CalculateCollatz(current_element, 0);
     }
     if (result_step_counter < s_Cache[current_element - 1]->load()) {
       result_step_counter = s_Cache[current_element - 1]->load();
@@ -87,24 +90,25 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
   return;
 }
 
-void CollatzProcessorImpl::CalculateCollatz(qsizetype current_element) {
-  qsizetype original_element = current_element;
-  qsizetype step_counter = 0;
-  while (current_element > 1) {
-    if (current_element < s_Cache.size() &&
-        s_Cache[current_element - 1]->load() != 0) {
-      step_counter += s_Cache[current_element - 1]->load();
-      break;
-    }
-    if (current_element % 2) {
-      current_element = current_element * 3 + 1;
-      if (WillOverflow(current_element)) this->RequestStop();
-    } else {
-      current_element /= 2;
-    }
+qsizetype CollatzProcessorImpl::CalculateCollatz(qsizetype current_element,
+                                                 qsizetype step_counter) {
+  if (current_element == 1) return ++step_counter;
+  if (current_element < s_Cache.size() - 1 &&
+      s_Cache[current_element - 1] != nullptr) {
+    step_counter += s_Cache[current_element - 1]->load();
+    return ++step_counter;
+  } else {
     ++step_counter;
   }
-  s_Cache[original_element - 1]->store(step_counter);
+  if (WillOverflow(current_element)) this->RequestStop();
+  qsizetype steps_it_took = CalculateCollatz(
+      current_element % 2 ? current_element * 3 + 1 : current_element / 2,
+      step_counter);
+  if (current_element < s_Cache.size() + 1 &&
+      s_Cache[current_element - 1] == nullptr)
+    s_Cache[current_element - 1] =
+        new std::atomic<qsizetype>{steps_it_took - step_counter};
+  return steps_it_took;
 }
 
 void CollatzProcessorImpl::SaveThreadResult(
