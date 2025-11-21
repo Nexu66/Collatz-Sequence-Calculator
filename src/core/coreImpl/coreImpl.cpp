@@ -2,18 +2,25 @@
 
 namespace Core {
 namespace impl {
-const qsizetype CollatzProcessorImpl::s_CoresCount =
+const qsizetype CollatzProcessorImpl::cs_CoresCount =
     QThread::idealThreadCount();
 std::vector<std::jthread> CollatzProcessorImpl::s_ThreadPool{
-    static_cast<size_t>(CollatzProcessorImpl::s_CoresCount)};
-std::atomic<qsizetype> CollatzProcessorImpl::Elements = 2;
+    static_cast<size_t>(CollatzProcessorImpl::cs_CoresCount)};
+std::atomic<qsizetype> CollatzProcessorImpl::s_Elements = 2;
+
+std::vector<std::pair<qsizetype, qsizetype> >
+    CollatzProcessorImpl::s_ThreadResults{};
+
+std::mutex CollatzProcessorImpl::s_ThreadResultsLock{};
+
+timer::Timer CollatzProcessorImpl::s_Timer{};
 
 void CollatzProcessorImpl::RequestStop() {
   s_ThreadPool.begin()->request_stop();
 }
 
 bool CollatzProcessorImpl::WillOverflow(qsizetype current_element) {
-  if (current_element > this->s_MaxSizeBeforeOverflow) is_Overflow = true;
+  if (current_element > this->cs_MaxSizeBeforeOverflow) is_Overflow = true;
   return is_Overflow;
 }
 
@@ -21,7 +28,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
     std::stop_token stop, const qsizetype CurrentThreadLimit,
     const qsizetype CurrentUpperLimit) {
   std::cout << "CURRENT CORES IN coreImpl: " << CurrentThreadLimit << "\n";
-  Timer.StartTimer();
+  s_Timer.StartTimer();
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i] =
         std::jthread{&CollatzProcessorImpl::Run, this, stop, CurrentUpperLimit};
@@ -30,7 +37,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i].join();
   }
-  Elements = 2;
+  s_Elements = 2;
 
   if (stop.stop_requested() && is_Overflow)
     return std::make_pair(Signals::VALUE_OVERFLOWED, Signals::VALUE_OVERFLOWED);
@@ -38,7 +45,7 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
     return std::make_pair(Signals::STOP, Signals::STOP);
 
   std::pair<qsizetype, qsizetype> res = FindFinalResult();
-  std::cout << "Out time is: " << Timer.StopTimer() << "ms\n";
+  std::cout << "Out time is: " << s_Timer.StopTimer() << "ms\n";
   std::cout << "Num: " << res.first << " Count: " << res.second << "\n";
 
   return res;
@@ -63,8 +70,8 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::CalculateCollatz(
 
 void CollatzProcessorImpl::SaveFinalThreadResult(
     std::pair<qsizetype, qsizetype> final_thread_result) {
-  std::lock_guard<std::mutex> write_access_lock{ThreadResultsLock};
-  ThreadResults.push_back(final_thread_result);
+  std::lock_guard<std::mutex> write_access_lock{s_ThreadResultsLock};
+  s_ThreadResults.push_back(final_thread_result);
   // for (auto p : ThreadResults) {
   //   std::cout << "Val: " << p.first << " Count: " << p.second << "\n";
   // }
@@ -72,17 +79,17 @@ void CollatzProcessorImpl::SaveFinalThreadResult(
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::FindFinalResult() {
   auto result = *std::ranges::max_element(
-      ThreadResults, [](const std::pair<qsizetype, qsizetype> first_el,
-                        const std::pair<qsizetype, qsizetype> second_el) {
+      s_ThreadResults, [](const std::pair<qsizetype, qsizetype> first_el,
+                          const std::pair<qsizetype, qsizetype> second_el) {
         return first_el.second < second_el.second;
       });
-  ThreadResults.clear();
+  s_ThreadResults.clear();
   return result;
 }
 
 void CollatzProcessorImpl::Run(std::stop_token stop,
                                const qsizetype CurrentUpperLimit) {
-  qsizetype current_element = Elements++;
+  qsizetype current_element = s_Elements++;
   std::pair<qsizetype, qsizetype> local_thread_result{1, 0};
 
   std::pair<qsizetype, qsizetype> current_result;
@@ -92,7 +99,7 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
     if (current_result.second > local_thread_result.second)
       local_thread_result = current_result;
 
-    current_element = Elements++;
+    current_element = s_Elements++;
   }
   SaveFinalThreadResult(local_thread_result);
 }

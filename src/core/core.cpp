@@ -5,7 +5,7 @@ void CollatzProcessor::StartProcessing(std::stop_token stop,
                                        qsizetype CurrentUpperLimit) noexcept {
   qInfo() << "THREADS:" << CurrentThreadLimit << "LIMIT:" << CurrentUpperLimit;
   if (CurrentThreadLimit >= 1 &&
-      CurrentThreadLimit <= impl::CollatzProcessorImpl::s_CoresCount) {
+      CurrentThreadLimit <= impl::CollatzProcessorImpl::cs_CoresCount) {
     auto algorithm_result =
         impl.StartProcessing(stop, CurrentThreadLimit, CurrentUpperLimit);
     if (algorithm_result.first == impl::Signals::STOP &&
@@ -15,7 +15,7 @@ void CollatzProcessor::StartProcessing(std::stop_token stop,
              algorithm_result.second == impl::Signals::VALUE_OVERFLOWED) {
       emit SendOverflowMessage();
     } else {
-      emit SendCollatzResult(algorithm_result, impl.Timer);
+      emit SendCollatzResult(algorithm_result, impl.s_Timer);
     }
   } else {
     emit RetryBtnStart();

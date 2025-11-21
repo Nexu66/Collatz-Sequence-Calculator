@@ -18,14 +18,14 @@ enum Signals { STOP = -1, VALUE_OVERFLOWED = -2 };
 class CollatzProcessorImpl {
  public:
   bool is_Overflow = false;
-  static const qsizetype s_CoresCount;
-  static const qsizetype s_MaxSizeBeforeOverflow =
+  static const qsizetype cs_CoresCount;
+  static const qsizetype cs_MaxSizeBeforeOverflow =
       std::numeric_limits<qsizetype>::max() / 3 + 1;
-  static std::atomic<qsizetype> Elements;
-  std::vector<std::pair<qsizetype, qsizetype>> ThreadResults;
-  std::mutex ThreadResultsLock;
+  static std::atomic<qsizetype> s_Elements;
+  static std::vector<std::pair<qsizetype, qsizetype>> s_ThreadResults;
+  static std::mutex s_ThreadResultsLock;
   static std::vector<std::jthread> s_ThreadPool;
-  timer::Timer Timer;
+  static timer::Timer s_Timer;
 
   void RequestStop();
   bool WillOverflow(qsizetype current_element);
