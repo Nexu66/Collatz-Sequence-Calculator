@@ -3,7 +3,6 @@ namespace Core {
 void CollatzProcessor::StartProcessing(std::stop_token stop,
                                        qsizetype CurrentThreadLimit,
                                        qsizetype CurrentUpperLimit) noexcept {
-  qInfo() << "THREADS:" << CurrentThreadLimit << "LIMIT:" << CurrentUpperLimit;
   if (CurrentThreadLimit >= 1 &&
       CurrentThreadLimit <= impl::CollatzProcessorImpl::cs_CoresCount &&
       CurrentUpperLimit >= 1 && CurrentUpperLimit <= 1000000000) {

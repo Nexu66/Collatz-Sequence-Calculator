@@ -2,14 +2,13 @@
 #include <QDebug>
 #include <QList>
 #include <QThread>
-#include <Timer.hpp>
 #include <atomic>
-#include <iostream>
 #include <limits>
-#include <mutex>
 #include <ranges>
 #include <thread>
 #include <vector>
+
+#include "Timer.hpp"
 
 namespace Core {
 namespace impl {
