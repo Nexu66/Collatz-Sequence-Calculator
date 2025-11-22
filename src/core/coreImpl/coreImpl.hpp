@@ -36,8 +36,8 @@ class CollatzProcessorImpl {
       const qsizetype CurrentUpperLimit);
   void CalculateCollatz(qsizetype current_element, qsizetype& step_counter);
   std::pair<qsizetype, qsizetype> FindFinalResult();
-  void Run(std::stop_token stop, const qsizetype CurrentUpperLimit,
-           const qsizetype IndexInResultsVector);
+  void Run(std::stop_token stop, const qsizetype IntervalBegin,
+           const qsizetype IntervalEnd, const qsizetype IndexInResultsVector);
 };
 
 }  // namespace impl

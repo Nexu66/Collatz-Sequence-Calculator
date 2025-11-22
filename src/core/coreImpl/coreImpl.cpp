@@ -35,11 +35,17 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
     std::stop_token stop, const qsizetype CurrentThreadLimit,
     const qsizetype CurrentUpperLimit) {
   std::cout << "CURRENT CORES IN coreImpl: " << CurrentThreadLimit << "\n";
+  const qsizetype ElementsPerThread = CurrentUpperLimit / CurrentThreadLimit;
   s_Timer.StartTimer();
-  for (int i = 0; i < CurrentThreadLimit; ++i) {
-    s_ThreadPool[i] = std::jthread{&CollatzProcessorImpl::Run, this, stop,
-                                   CurrentUpperLimit, i};
+  int i = 0;
+  for (; i < CurrentThreadLimit - 1; ++i) {
+    s_ThreadPool[i] = std::jthread{
+        &CollatzProcessorImpl::Run,  this, stop, ElementsPerThread * i,
+        ElementsPerThread * (i + 1), i};
   }
+  s_ThreadPool[i] = std::jthread{
+      &CollatzProcessorImpl::Run, this, stop, ElementsPerThread * i,
+      CurrentUpperLimit,          i};
 
   for (int i = 0; i < CurrentThreadLimit; ++i) {
     s_ThreadPool[i].join();
@@ -57,14 +63,14 @@ std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
   return res;
 }
 void CollatzProcessorImpl::Run(std::stop_token stop,
-                               const qsizetype CurrentUpperLimit,
+                               const qsizetype IntervalBegin,
+                               const qsizetype IntervalEnd,
                                const qsizetype IndexInResultsVector) {
-  const qsizetype StepInCachedVector = IndexInResultsVector + 1;
-  qsizetype current_element = CurrentUpperLimit + 1 - StepInCachedVector;
+  qsizetype current_element = IntervalEnd;
   qsizetype& result_element = s_ThreadResults[IndexInResultsVector].first;
   qsizetype& result_step_counter = s_ThreadResults[IndexInResultsVector].second;
 
-  while (current_element > 1) {
+  while (current_element > IntervalBegin) {
     qsizetype local_step_counter = 0;
     if (s_Cache[current_element - 1].load() == 0) {
       CalculateCollatz(current_element, local_step_counter);
@@ -76,7 +82,8 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
     }
 
     if (stop.stop_requested()) return;
-    current_element -= StepInCachedVector;
+    --current_element;
+    ;
   }
   return;
 }
