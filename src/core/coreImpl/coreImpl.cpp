@@ -59,16 +59,11 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
                                const qsizetype CurrentUpperLimit,
                                const qsizetype IndexInResultsVector) {
   const qsizetype StepInCachedVector = IndexInResultsVector + 1;
-  qsizetype current_element = StepInCachedVector;
+  qsizetype current_element = CurrentUpperLimit + 1 - StepInCachedVector;
   qsizetype result_element = 1;
   qsizetype result_step_counter = 0;
 
-  while (current_element <= CurrentUpperLimit) {
-    if (current_element == 1) {
-      current_element += StepInCachedVector;
-      continue;
-    }
-
+  while (current_element > 1) {
     if (s_Cache[current_element - 1].load() == 0) {
       CalculateCollatz(current_element, 0);
     }
@@ -78,7 +73,7 @@ void CollatzProcessorImpl::Run(std::stop_token stop,
     }
 
     if (stop.stop_requested()) return;
-    current_element += StepInCachedVector;
+    current_element -= StepInCachedVector;
   }
   this->SaveThreadResult(result_element, result_step_counter,
                          IndexInResultsVector);
