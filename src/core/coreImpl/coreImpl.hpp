@@ -8,7 +8,6 @@
 #include <limits>
 #include <mutex>
 #include <ranges>
-#include <semaphore>
 #include <thread>
 #include <vector>
 

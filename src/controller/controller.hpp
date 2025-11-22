@@ -3,8 +3,8 @@
 #include <QScopedPointer>
 #include <thread>
 
-#include "core.hpp"
-#include "dialog.hpp"
+#include "model.hpp"
+#include "view.hpp"
 namespace Ctrl {
 class Controller : public QObject {
   Q_OBJECT

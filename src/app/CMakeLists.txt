@@ -6,6 +6,8 @@ qt_add_executable(main
 target_link_libraries(main
     PRIVATE
         controller
+        dialog
+        core
 )
 
 target_link_options(main PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>)
