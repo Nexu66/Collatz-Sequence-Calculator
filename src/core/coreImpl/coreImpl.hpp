@@ -15,7 +15,6 @@ namespace impl {
 enum Signals { STOP = -1, VALUE_OVERFLOWED = -2 };
 class CollatzProcessorImpl {
  public:
-  CollatzProcessorImpl();
   ~CollatzProcessorImpl();
   bool IsOverflow = false;
   static const qsizetype cs_UpperLimitCap = 100000000;

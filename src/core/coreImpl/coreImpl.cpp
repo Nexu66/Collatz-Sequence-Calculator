@@ -14,13 +14,17 @@ std::atomic<qsizetype>* CollatzProcessorImpl::s_pCache =
     new std::atomic<qsizetype>[cs_UpperLimitCap] { 0 };
 
 CollatzProcessorImpl::CollatzProcessorImpl() {
-  s_ThreadResults.resize(cs_CoresCount);
+  // s_ThreadResults.resize(cs_CoresCount);
 }
 
-CollatzProcessorImpl::~CollatzProcessorImpl() { delete[] s_pCache; }
+CollatzProcessorImpl::~CollatzProcessorImpl() {
+  delete[] s_pCache;
+  s_pCache = nullptr;
+}
 
 std::vector<std::pair<qsizetype, qsizetype>>
-    CollatzProcessorImpl::s_ThreadResults{};
+    CollatzProcessorImpl::s_ThreadResults{
+        static_cast<size_t>(CollatzProcessorImpl::cs_CoresCount)};
 
 void CollatzProcessorImpl::RequestStop() {
   s_ThreadPool.begin()->request_stop();
