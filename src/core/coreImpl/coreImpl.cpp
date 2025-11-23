@@ -13,10 +13,6 @@ timer::Timer CollatzProcessorImpl::s_Timer{};
 std::atomic<qsizetype>* CollatzProcessorImpl::s_pCache =
     new std::atomic<qsizetype>[cs_UpperLimitCap] { 0 };
 
-CollatzProcessorImpl::CollatzProcessorImpl() {
-  // s_ThreadResults.resize(cs_CoresCount);
-}
-
 CollatzProcessorImpl::~CollatzProcessorImpl() {
   delete[] s_pCache;
   s_pCache = nullptr;
@@ -31,8 +27,11 @@ void CollatzProcessorImpl::RequestStop() {
 }
 
 bool CollatzProcessorImpl::WillOverflow(const qsizetype CurrentElement) {
-  if (CurrentElement > this->cs_MaxSizeBeforeOverflow) IsOverflow = true;
-  return IsOverflow;
+  if (CurrentElement > this->cs_MaxSizeBeforeOverflow) {
+    IsOverflow = true;
+    return true;
+  }
+  return false;
 }
 
 std::pair<qsizetype, qsizetype> CollatzProcessorImpl::StartProcessing(
