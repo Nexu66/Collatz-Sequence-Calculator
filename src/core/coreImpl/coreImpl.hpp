@@ -18,7 +18,7 @@ class CollatzProcessorImpl {
   CollatzProcessorImpl();
   ~CollatzProcessorImpl();
   bool IsOverflow = false;
-  static const qsizetype cs_UpperLimitCap = 1000000000;
+  static const qsizetype cs_UpperLimitCap = 100000000;
   static const qsizetype cs_CoresCount;
   static const qsizetype cs_MaxSizeBeforeOverflow =
       std::numeric_limits<qsizetype>::max() / 3 + 1;
