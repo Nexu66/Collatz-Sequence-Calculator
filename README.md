@@ -75,7 +75,7 @@ Build the tests target (they are discovered with gtest_discover_tests()):
 ```bash
 cd build
 cmake --build . --target tests
-ctest -j$(nproc) -V
+ctest -V
 ```
 ## 💡 Tips & notes
 ⚠️ cs_UpperLimitCap is large by default.
