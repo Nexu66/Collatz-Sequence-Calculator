@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(HillelFinal LANGUAGES CXX)
+project(Collatz-Sequence-Calculator LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
