@@ -65,10 +65,8 @@ void PrintTo(const CalculateCollatzElement& element, std::ostream* os) {
   }
 }
 
-class TestCalculateCollatz : public TestWithParam<CalculateCollatzElement> {
- protected:
-  CollatzProcessorImpl object;
-};
+class TestCalculateCollatz : public WithParamInterface<CalculateCollatzElement>,
+                             public FixtureCollatzProcessorImpl {};
 
 TEST_P(TestCalculateCollatz, DifferentElementsProcessing) {
   auto Element = this->GetParam();
@@ -102,10 +100,8 @@ void PrintTo(const RunElement& element, std::ostream* os) {
       << element.ExpectedStepCount << " ";
 }
 
-class TestRun : public TestWithParam<RunElement> {
- protected:
-  CollatzProcessorImpl object;
-};
+class TestRun : public WithParamInterface<RunElement>,
+                public FixtureCollatzProcessorImpl {};
 
 TEST_P(TestRun, TestDifferencIntervals) {
   auto CurrentElement = this->GetParam();
@@ -139,10 +135,8 @@ void PrintTo(const StartProcessingElement& element, std::ostream* os) {
       << element.ExpectedResult.second << " ";
 }
 
-class TestStartProcessing : public TestWithParam<StartProcessingElement> {
- protected:
-  CollatzProcessorImpl object;
-};
+class TestStartProcessing : public WithParamInterface<StartProcessingElement>,
+                            public FixtureCollatzProcessorImpl {};
 
 TEST_P(TestStartProcessing, TestDifferentThreadAndUpperLimits) {
   auto CurrentElement = this->GetParam();
