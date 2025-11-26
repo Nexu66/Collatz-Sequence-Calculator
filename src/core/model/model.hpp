@@ -9,6 +9,8 @@ namespace Core {
 class Model : public QObject {
   Q_OBJECT
  public:
+  Model(QObject* Parent = nullptr) : QObject{Parent} {}
+  virtual ~Model() = default;
   virtual void StartProcessing(const std::stop_token StopToken,
                                const qsizetype CurrentCoresSelected,
                                const qsizetype CurrentUpperLimit) noexcept = 0;
