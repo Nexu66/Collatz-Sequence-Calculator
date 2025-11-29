@@ -8,7 +8,7 @@ class CollatzProcessor : public Model {
   Q_OBJECT
   impl::CollatzProcessorImpl m_Impl;
 
- private:
+ protected:
   void StartProcessing(const std::stop_token StopToken,
                        const qsizetype CurrentCoresSelected,
                        const qsizetype CurrentUpperLimit) noexcept override;

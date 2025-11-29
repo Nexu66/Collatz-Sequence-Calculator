@@ -13,7 +13,7 @@ class MainDialog : public View {
   MainDialog(QWidget* Parent = nullptr);
   ~MainDialog();
 
- private slots:
+ protected slots:
   void on_btnStart_clicked() noexcept override;
   void on_btnExit_clicked() noexcept override;
 
@@ -26,7 +26,7 @@ class MainDialog : public View {
   void DisplayOverflowMessage() noexcept override;
   void RetrySendingViewInfo() noexcept override;
 
- private:
+ protected:
   Dialog* m_Ui;
 };
 
