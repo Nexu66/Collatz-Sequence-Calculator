@@ -6,10 +6,21 @@ using namespace testing;
 
 class FixtureCollatzProcessorImpl : public Test {
  protected:
-  CollatzProcessorImpl object;
-};
+  static CollatzProcessorImpl object;
 
-TEST_F(FixtureCollatzProcessorImpl, TestConstructorDestructor) {
+  ~FixtureCollatzProcessorImpl() {
+    for (int i = 0; i < object.s_ThreadResults.size(); ++i) {
+      object.s_ThreadResults[i] = std::make_pair(0, 0);
+    }
+    for (int i = 0; i < object.cs_UpperLimitCap; ++i) {
+      object.s_pCache[i].store(0);
+    }
+    object.IsOverflow = false;
+  }
+};
+CollatzProcessorImpl FixtureCollatzProcessorImpl::object;
+
+TEST_F(FixtureCollatzProcessorImpl, TestConstructor) {
   EXPECT_EQ(object.cs_CoresCount, object.s_ThreadResults.size());
   EXPECT_EQ(object.cs_CoresCount, object.s_ThreadPool.size());
 }
